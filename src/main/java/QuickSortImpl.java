@@ -12,25 +12,36 @@ public class QuickSortImpl implements Sort {
         if (list.size() == 1 || list.size() == 0) {
             return list;
         }
+        quickSort(list,0,list.size() - 1);
+        return list;
+    }
 
-        int lastElementIdx = list.size() - 1;
+    private void quickSort(List<Integer> list, int firstIdx, int endIdx) {
+        if (firstIdx < endIdx) {
+            int partIdx = partition(list, firstIdx, endIdx);
 
-        List<Integer> leftOfPivot = new ArrayList<>();
-        List<Integer> rightOfPivot = new ArrayList<>();
+            quickSort(list,partIdx + 1,endIdx);
+            quickSort(list,firstIdx,partIdx - 1);
+        }
+    }
 
+    private int partition(List<Integer> list, int firstIdx, int endIdx) {
+        int lastElement = list.get(endIdx);
+        int currentElementIdx = firstIdx;
 
-        for (int i = 0; i < lastElementIdx; i++) {
-            Integer element = list.get(i);
-            if (element.compareTo(list.get(lastElementIdx)) == -1) {
-                leftOfPivot.add(element);
-            } else {
-                rightOfPivot.add(element);
+        int temp;
+        for (int i = firstIdx; i < endIdx; i++) {
+            if (lastElement >= list.get(i)) {
+                temp = list.get(i);
+                list.set(i,list.get(currentElementIdx));
+                list.set(currentElementIdx,temp);
+                currentElementIdx++;
             }
         }
+        temp = list.get(endIdx);
+        list.set(endIdx,list.get(currentElementIdx));
+        list.set(currentElementIdx,temp);
 
-        List<Integer> result = sort(leftOfPivot);
-        result.add(list.get(lastElementIdx));
-        result.addAll(sort(rightOfPivot));
-        return result;
+        return currentElementIdx;
     }
 }
